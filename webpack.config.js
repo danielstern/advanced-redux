@@ -12,16 +12,19 @@ module.exports = {
                     presets: ['es2015','react'],
                     plugins: ['transform-object-rest-spread']
                 }
-            },
-            {
-                test:/\.less$/,
-                exclude:'/node_modules',
-                loader:"style!css!less"
             }
         ]
     },
+    plugins: [
+        new webpack.HotModuleReplacementPlugin(),
+        new webpack.NoErrorsPlugin()
+    ],
     entry: {
-        "index": ["./src/main"]
+        "index": [
+            'babel-regenerator-runtime',
+            'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true',
+            './src/main'
+        ]
     },
     output: {
         path: path.resolve(__dirname, "public"),
