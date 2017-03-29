@@ -26,7 +26,7 @@ const simulateCreateMessage=(user)=>{
         const userID = chance.pick(channel.participants);
         createMessage({userID,channelID,messageID,input})
     }
-}
+};
 
 export function simulateActivity(userID){
     setInterval(simulateCreateMessage,interval,userID);

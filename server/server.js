@@ -42,9 +42,7 @@ app.use(webpackHotMiddleware(compiler, {
 
 import { getDefaultState } from './getDefaultState'
 import { handleRender } from './serverRenderMiddleWare';
-import { Chance } from 'chance';
-
-import {initializeDB} from './db/initializeDB';
+import { initializeDB } from './db/initializeDB';
 
 import {
     chance
@@ -125,27 +123,13 @@ app.use('/input/submit/:userID/:channelID/:messageID/:input',({params:{userID,ch
     res.status(300).send();
 });
 
-app.use('/avatar/:id.svg',(req,res)=>{
-    const chance = new Chance(req.params.id);
-    const color = chance.color();
-    res.status(200).send(
-        `<svg>
-            <rect width="40" height="40" fill="${color}">
-                
-            </rect>
-        </svg>
-    `);
-});
-
-
 app.use(express.static('public/css'));
 app.use('/',handleRender(()=>getDefaultState(currentUser)));
 
-
-
-
 const port = 9000;
+
 server.listen(port,()=>{
     console.info(`Redux Messenger is listening on port ${port}.`);
 });
+
 simulateActivity(currentUser.id);
