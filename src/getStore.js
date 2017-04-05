@@ -19,19 +19,13 @@ import {
 } from './actions'
 
 import { reducer } from './reducers';
+import { createSocketMiddleware} from './socketMiddleware'
 
 const preloadedState = getPreloadedState();
 const sagaMiddleware = createSagaMiddleware();
 
-const io = window.io;
 
-const createSocketMiddleware = io => config => store => next => action => {
-    for (const key in config) {
-        socket.on(key, config[key]);
-    }
-    let result = next(action);
-    return result;
-}
+const io = window.io;
 
 const socketMiddleware = createSocketMiddleware(io)({
     NEW_MESSAGE:(data)=>({
@@ -39,13 +33,6 @@ const socketMiddleware = createSocketMiddleware(io)({
         message:data
     })
 });
-
-const socket = io();
-socket.on('connect', function(){});
-socket.on('NEW_MESSAGE', function(data){
-    store.dispatch(receiveMessage(data));
-});
-socket.on('disconnect', function(){});
 
 const enhancer = compose(
     applyMiddleware(
