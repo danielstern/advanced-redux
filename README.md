@@ -33,7 +33,7 @@ or
 ```javascript
 npm run dev 
 ```
-* `npm-run-dev` is meant for development and includes file monitoring with Nodemon
+* `npm run dev` is meant for development and includes file monitoring with Nodemon
 
 4. Navigate to the application in Chrome
 [http://localhost:9000/#](http://localhost:9000)

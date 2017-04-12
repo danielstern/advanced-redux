@@ -43,6 +43,7 @@ const enhancer = compose(
     DevTools.instrument(),
     persistState(getDebugSessionKey())
 );
+
 const store = createStore(
     reducer,
     preloadedState,
