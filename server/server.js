@@ -4,7 +4,6 @@ import cors from 'cors';
 import webpack from 'webpack';
 import webpackConfig from './../webpack.config'
 import webpackDevMiddleware from 'webpack-dev-middleware';
-import { simulateActivity } from './simulateActivity';
 const compiler = webpack(webpackConfig);
 import webpackHotMiddleware from "webpack-hot-middleware";
 
@@ -16,17 +15,8 @@ import {
     users
 } from './db/User';
 
-import  socketIO from 'socket.io'
-
-import {
-    OFFLINE,
-    ONLINE,
-    AWAY
-} from './../src/actions'
-
 let app = express();
 const server = http.createServer(app);
-const io = socketIO(server);
 
 app.use(cors());
 app.use(webpackDevMiddleware(compiler, {
@@ -41,17 +31,11 @@ app.use(webpackHotMiddleware(compiler, {
 }));
 
 import { getDefaultState } from './getDefaultState'
-import { handleRender } from './serverRenderMiddleWare';
 import { initializeDB } from './db/initializeDB';
 
-import {
-    chance
-} from './../src/utility';
-
 initializeDB();
-const currentUser = chance.pick(users);
+const currentUser = users[0];
 
-// Simulate a small amount of delay to demonstrate app's async features
 app.use((req,res,next)=>{
     const delay = 297;
     setTimeout(next,delay);
@@ -84,7 +68,7 @@ app.use('/user/:id',(req,res)=>{
 });
 
 app.use('/status/:id/:status',({params:{id,status}},res)=>{
-    if (![ONLINE,OFFLINE,AWAY].includes(status)) {
+    if (![`ONLINE`,`OFFLINE`,`AWAY`].includes(status)) {
         return res.status(403).send();
     }
     const user = users
@@ -110,7 +94,7 @@ export const createMessage = ({userID,channelID,messageID,input}) =>{
 
     channel.messages.push(message);
     io.emit("NEW_MESSAGE",{channelID:channel.id, ...message});
-}
+};
 
 app.use('/input/submit/:userID/:channelID/:messageID/:input',({params:{userID,channelID,messageID,input}},res)=>{
     const user = users.find(user=>user.id === userID);
@@ -123,13 +107,10 @@ app.use('/input/submit/:userID/:channelID/:messageID/:input',({params:{userID,ch
     res.status(300).send();
 });
 
+app.use(express.static('public'));
 app.use(express.static('public/css'));
-app.use('/',handleRender(()=>getDefaultState(currentUser)));
 
 const port = 9000;
-
 server.listen(port,()=>{
     console.info(`Redux Messenger is listening on port ${port}.`);
 });
-
-simulateActivity(currentUser.id);
