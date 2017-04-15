@@ -2,6 +2,7 @@ import React from 'react';
 import reactDOM from 'react-dom'
 import {getStore} from './getStore';
 import { App } from './App';
+import { OFFLINE, updateStatus } from './actions';
 
 const store = getStore();
 
@@ -23,3 +24,6 @@ const render = (store)=>{
 };
 
 render(store);
+
+const action = updateStatus(OFFLINE);
+store.dispatch(action);
