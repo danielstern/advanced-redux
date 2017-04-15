@@ -5,8 +5,13 @@ import { App } from './App';
 
 const store = getStore();
 
-const Main = ()=>(
+const Main = ({state})=>(
+    <div>
+        <h1>
+            Welcome, {state.get(`currentUser`).get(`name`)}
+        </h1>
         <App/>
+    </div>
 );
 
 const render = (store)=>{
