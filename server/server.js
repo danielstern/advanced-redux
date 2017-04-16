@@ -69,7 +69,6 @@ export const createMessage = ({userID,channelID,messageID,input}) =>{
 
     channel.messages.push(message);
     io.emit("NEW_MESSAGE",{channelID:channel.id, ...message});
-    console.log("IO emmitting...");
 };
 
 app.use('/channel/:id',(req,res)=>{

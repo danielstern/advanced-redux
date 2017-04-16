@@ -28,12 +28,21 @@ import {
 
 const io = window.io;
 
-const socketMiddleware = createSocketMiddleware(io)({
+const socketConfigOut = {
+    UPDATE_STATUS:(data)=>({
+        type:"UPDATE_USER_STATUS",
+        status:data
+    })
+};
+
+const socketConfigIn = {
     NEW_MESSAGE:(data)=>({
         type:RECEIVE_MESSAGE,
         message:data
     })
-});
+};
+
+const socketMiddleware = createSocketMiddleware(io)(socketConfigOut);
 
 import { createLogger } from 'redux-logger'
 
@@ -54,6 +63,13 @@ const enhancer = compose(
 const currentUser = users[0];
 const defaultState = fromJS(getDefaultState(currentUser));
 const store = createStore(reducer,defaultState,enhancer);
+
+const socket = io();
+for (const key in socketConfigIn) {
+    socket.on(key, (data)=>{
+        store.dispatch(socketConfigIn[key](data));
+    });
+}
 
 // console.log(store.getState());
 // console.log(store.getState().toJS());

@@ -17,7 +17,6 @@ const max = 100;
 let count = 0;
 
 const simulateCreateMessage=(user)=>{
-    console.log("Creating message....");
     if (count < max) {
         count++;
         const input = getRandomMessageText(users.map(user=>user));
