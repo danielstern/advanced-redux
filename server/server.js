@@ -4,6 +4,7 @@ import cors from 'cors';
 import webpack from 'webpack';
 import webpackConfig from './../webpack.config'
 import webpackDevMiddleware from 'webpack-dev-middleware';
+import  socketIO from 'socket.io'
 const compiler = webpack(webpackConfig);
 import webpackHotMiddleware from "webpack-hot-middleware";
 
@@ -17,6 +18,7 @@ import {
 
 let app = express();
 const server = http.createServer(app);
+const io = socketIO(server);
 
 app.use(cors());
 app.use(webpackDevMiddleware(compiler, {
@@ -30,8 +32,9 @@ app.use(webpackHotMiddleware(compiler, {
     'heartbeat': 10 * 1000
 }));
 
-import { getDefaultState } from './getDefaultState'
 import { initializeDB } from './db/initializeDB';
+import { simulateActivity } from './simulateActivity';
+
 
 initializeDB();
 const currentUser = users[0];
@@ -51,6 +54,23 @@ app.use('/channel/create/:channelID/:name/:participants',({params:{channelID,nam
     channels.push(channel);
     res.status(300).json(channel);
 });
+
+
+export const createMessage = ({userID,channelID,messageID,input}) =>{
+    const channel = channels.find(channel=>channel.id === channelID);
+
+    const message = {
+        id:messageID,
+        content:{
+            text:input
+        },
+        owner:userID
+    };
+
+    channel.messages.push(message);
+    io.emit("NEW_MESSAGE",{channelID:channel.id, ...message});
+    console.log("IO emmitting...");
+};
 
 app.use('/channel/:id',(req,res)=>{
     res.json(channels.find(channel=>channel.id === req.params.id));
@@ -81,21 +101,6 @@ app.use('/status/:id/:status',({params:{id,status}},res)=>{
     }
 });
 
-export const createMessage = ({userID,channelID,messageID,input}) =>{
-    const channel = channels.find(channel=>channel.id === channelID);
-
-    const message = {
-        id:messageID,
-        content:{
-            text:input
-        },
-        owner:userID
-    };
-
-    channel.messages.push(message);
-    io.emit("NEW_MESSAGE",{channelID:channel.id, ...message});
-};
-
 app.use('/input/submit/:userID/:channelID/:messageID/:input',({params:{userID,channelID,messageID,input}},res)=>{
     const user = users.find(user=>user.id === userID);
 
@@ -114,3 +119,5 @@ const port = 9000;
 server.listen(port,()=>{
     console.info(`Redux Messenger is listening on port ${port}.`);
 });
+
+simulateActivity(currentUser.id);
