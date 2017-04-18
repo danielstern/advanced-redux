@@ -22,6 +22,7 @@
     "webpack-dev-middleware": "^1.10.1"
   },
   "dependencies": {
+    "classnames": "^2.2.5",
     "cors": "^2.8.1",
     "express": "^4.15.2",
     "isomorphic-fetch": "^2.2.1",

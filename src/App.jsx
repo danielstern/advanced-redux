@@ -2,6 +2,10 @@ import React from 'react';
 
 import {
     ContactListContainer,
+    ChannelContentContainer,
+    CurrentChannelTextInputContainer,
+    ChannelListContainer,
+    CurrentUserContainer
 } from './components';
 
 export const App = ()=>(
@@ -15,23 +19,23 @@ export const App = ()=>(
         </nav>
         <div className="row">
             <div className="col-xs-3">
-                {/*<div>*/}
-                    {/*<ChannelListContainer />*/}
-                {/*</div>*/}
+                <div>
+                    <ChannelListContainer />
+                </div>
             </div>
             <div className="col-xs-6">
-                {/*<div>*/}
-                    {/*<ChannelContentContainer />*/}
-                {/*</div>*/}
-                {/*<div>*/}
-                    {/*<CurrentChannelTextInputContainer />*/}
-                {/*</div>*/}
+                <div>
+                    <ChannelContentContainer />
+                </div>
+                <div>
+                    <CurrentChannelTextInputContainer />
+                </div>
 
             </div>
             <div className="col-xs-3">
-                {/*<div>*/}
-                    {/*<CurrentUserContainer />*/}
-                {/*</div>*/}
+                <div>
+                    <CurrentUserContainer />
+                </div>
                 <div>
                     <ContactListContainer />
                 </div>

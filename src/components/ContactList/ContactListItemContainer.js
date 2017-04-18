@@ -2,14 +2,14 @@ import React from 'react'
 
 import { connect } from 'react-redux'
 import { ContactListItem } from './ContactListItem';
-import { openContactChannel } from './../../actions'
 import { fromJS } from 'immutable';
+
 
 const mapStateToProps = (state, {id}) => {
     // todo... add selector here
     const contact = fromJS({
-        name:"Test",
-        id:"test-id",
+        name:id,
+        id,
         status:"ONLINE"
     });
     // contact = state.get(`c`)
@@ -22,7 +22,7 @@ const mapStateToProps = (state, {id}) => {
 
 const mapDispatchToProps = (dispatch) => ({
     openChannel(id){
-        dispatch(openContactChannel(id));
+        console.log("Opening channel...",id);
     }
 });
 
