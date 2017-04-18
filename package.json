@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "babel-node server/server.js",
-    "dev": "nodemon --watch server/**/* --exec babel-node --inspect server/server.js"
+    "dev": "nodemon --watch server/**/* --watch components/**/* --exec babel-node --inspect server/server.js"
   },
   "devDependencies": {
     "babel-core": "^6.18.2",
@@ -26,6 +26,7 @@
     "express": "^4.15.2",
     "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.17.4",
+    "react-redux": "^5.0.4",
     "redux": "^3.6.0",
     "redux-logger": "^3.0.1"
   },
