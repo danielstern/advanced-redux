@@ -4,6 +4,8 @@ import {
     compose
 } from 'redux';
 
+import thunk from 'redux-thunk';
+
 import {
     fromJS
 } from 'immutable';
@@ -55,6 +57,7 @@ const logger = createLogger({
 
 const enhancer = compose(
     applyMiddleware(
+        thunk,
         socketMiddleware,
         logger
     )
@@ -71,6 +74,4 @@ for (const key in socketConfigIn) {
     });
 }
 
-// console.log(store.getState());
-// console.log(store.getState().toJS());
 export const getStore = ()=>store;

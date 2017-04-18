@@ -6,11 +6,14 @@ import {
     ChannelContent
 } from './ChannelContent';
 
-// todo... add selector;
+import {
+    activeChannelSelector,
+} from './../../selectors'
+
 const mapStateToProps = (state) => {
     const channels = state.get(`channels`);
     const activeChannel = state.get(`activeChannel`);
-    const channel = channels.find(channel => channel.get(`id`) === activeChannel);
+    const channel = activeChannelSelector(state);
 
     return {
         messages:channel.get(`messages`),
