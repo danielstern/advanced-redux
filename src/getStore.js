@@ -7,9 +7,13 @@ import {
 import { initSagas } from './initSagas';
 import createSagaMiddleware from 'redux-saga';
 import { getPreloadedState } from './getPreloadedState'
+import { DevTools } from './components/DevTools/DevTools'
+import { getDebugSessionKey } from './utility'
 
 
 import thunk from 'redux-thunk';
+import { persistState } from 'redux-devtools';
+
 const sagaMiddleware = createSagaMiddleware();
 
 
@@ -55,11 +59,11 @@ const enhancer = compose(
         sagaMiddleware,
         thunk,
         socketMiddleware,
-        logger
-    )
+    ),
+    DevTools.instrument(),
+    persistState(getDebugSessionKey())
 );
 
-console.log("Preloaded state?",preloadedState);
 const preloadedState = getPreloadedState();
 const store = createStore(
     reducer,
@@ -78,3 +82,4 @@ for (const key in socketConfigIn) {
 
 export const getStore = ()=>store;
 initSagas(sagaMiddleware);
+
