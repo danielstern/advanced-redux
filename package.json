@@ -22,12 +22,17 @@
     "webpack-dev-middleware": "^1.10.1"
   },
   "dependencies": {
+    "chance": "^1.0.6",
     "cors": "^2.8.1",
     "express": "^4.15.2",
+    "immutable": "^3.8.1",
     "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.17.4",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4",
     "redux": "^3.6.0",
-    "redux-logger": "^3.0.1"
+    "redux-logger": "^3.0.1",
+    "socket.io": "^1.7.3"
   },
   "keywords": [],
   "author": "",
