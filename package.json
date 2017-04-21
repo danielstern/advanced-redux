@@ -28,11 +28,14 @@
     "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.17.4",
     "react-redux": "^5.0.4",
+    "react-dom": "^15.5.4",
+    "react": "^15.5.4",
     "redux": "^3.6.0",
     "redux-logger": "^3.0.1",
     "redux-saga": "^0.14.6",
     "redux-thunk": "^2.2.0",
-    "reselect": "^3.0.0"
+    "reselect": "^3.0.0",
+    "socket.io": "^1.7.3"
   },
   "keywords": [],
   "author": "",
