@@ -4,14 +4,16 @@ import {getStore} from './getStore';
 import { App } from './App';
 import { OFFLINE, updateStatus } from './actions';
 
+import { Provider } from 'react-redux';
+
 const store = getStore();
 
 const Main = ({state})=>(
     <div>
-        <h1>
-            Welcome, {state.get(`currentUser`).get(`name`)}
-        </h1>
-        <App/>
+        <Provider store={store}>
+            <App/>
+        </Provider>
+
     </div>
 );
 
