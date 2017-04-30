@@ -4,13 +4,7 @@ import {
     compose
 } from 'redux';
 
-import {
-    fromJS
-} from 'immutable';
-
-import {
-    users,
-} from './../server/db';
+import thunk from 'redux-thunk';
 
 import {
     getPreloadedState
@@ -59,6 +53,7 @@ const logger = createLogger({
 
 const enhancer = compose(
     applyMiddleware(
+        thunk,
         socketMiddleware,
         logger
     )
