@@ -23,6 +23,7 @@ git clone git@github.com:danielstern/advanced-redux.git
 ```bash
 cd advanced-redux
 npm install
+npm install -g babel-cli
 ```
 
 3. Start the application
