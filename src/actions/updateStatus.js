@@ -1,4 +1,4 @@
-import { makeActionCreator } from './';
+import { makeActionCreator } from './../utility';
 
 export const UPDATE_STATUS = `UPDATE_STATUS`;
 export const ONLINE = `ONLINE`;

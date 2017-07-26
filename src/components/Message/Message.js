@@ -5,4 +5,4 @@ export const Message = ({owner:{name},text})=>(
             {name}
         </b>: {text}
     </div>
-)
+);

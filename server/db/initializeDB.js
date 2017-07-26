@@ -4,14 +4,11 @@ import {
 } from './'
 
 import {
-    ONLINE, OFFLINE, AWAY, FETCHED
-} from './../../src/actions'
-
-import {
     template
 } from 'lodash';
 
-import { chance } from './../../src/utility';
+import { Chance } from 'chance';
+const chance = new Chance();
 
 const messageActions = [`collate`,`port`,`merge`,`refactor`,`check`,`deploy`,`automate`,`debug`,`erase`,`cache`,`rebase`,`transpile`,`desync`,`fork`];
 const messageObjects = [`repo`,`source code`,`code base`,`sprint`,`workflow`,`debugger`,`module`,`version`,`transpiler`,`language`,`integer`,`router`];
@@ -52,8 +49,8 @@ export const initializeDB = ()=>{
             id: chance.guid(),
             contacts: [],
             channels:[],
-            fetchStatus:FETCHED,
-            status:chance.pick([ONLINE,OFFLINE,AWAY])
+            fetchStatus:`FETCHED`,
+            status:chance.pick([`ONLINE`,`OFFLINE`,`AWAY`])
         })
     }
 

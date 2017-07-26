@@ -6,33 +6,25 @@ import {
     CurrentChannelTextInput
 } from './CurrentChannelTextInput';
 
-import {
-    updateChannelInputText,
-    submitChannelInputText,
-} from './../../actions/';
-
-import {
-    activeChannelSelector,
-    currentUserSelector
-} from './../../selectors'
+// todo... add actions and selectors
 
 const mapStateToProps = (state) => {
-    const activeChannel = activeChannelSelector(state);
+    const activeChannel = state.get(activeChannel);
     return {
-        activeChannel:activeChannel.get(`id`),
-        text:activeChannel.get(`currentUserText`),
-        fetchStatus:activeChannel.get(`fetchStatus`),
-        userStatus:currentUserSelector(state).get(`status`)
+        activeChannel:activeChannel,
+        text:"Demo Text",
+        fetchStatus:"FETCHED",
+        userStatus:"ONLINE"
     }
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
         updateText: (text,channel) => {
-            dispatch(updateChannelInputText(channel,text));
+            console.log("Update text...");
         },
         submitMessage: (text,channel) => {
-            dispatch(submitChannelInputText(channel,text));
+            console.log("Submit message");
         }
     }
 };

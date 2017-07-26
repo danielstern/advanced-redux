@@ -1,26 +1,31 @@
 import React from 'react';
 import reactDOM from 'react-dom'
 import {getStore} from './getStore';
-import {Provider} from 'react-redux';
-
-import { DevTools } from './components/DevTools/DevTools'
 import { App } from './App';
+import { OFFLINE, updateStatus } from './actions';
+
+import { Provider } from 'react-redux';
 
 const store = getStore();
 
-const Main = ()=>(
-    <Provider store={store}>
-        <App/>
-    </Provider>
-)
+const Main = ({state})=>(
+    <div>
+        <Provider store={store}>
+            <App/>
+        </Provider>
+
+    </div>
+);
 
 const render = (store)=>{
         reactDOM.render(
             <div>
                 <Main state={store.getState()}/>
-                <DevTools store={store}/>
             </div>,
             document.getElementById('AppContainer'));
 };
 
 render(store);
+
+const action = updateStatus(OFFLINE);
+store.dispatch(action);

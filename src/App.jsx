@@ -1,12 +1,11 @@
 import React from 'react';
 
-
 import {
     ContactListContainer,
-    CurrentUserContainer,
-    ChannelListContainer,
     ChannelContentContainer,
-    CurrentChannelTextInputContainer
+    CurrentChannelTextInputContainer,
+    ChannelListContainer,
+    CurrentUserContainer
 } from './components';
 
 export const App = ()=>(

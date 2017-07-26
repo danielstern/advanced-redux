@@ -4,9 +4,10 @@ import cors from 'cors';
 import webpack from 'webpack';
 import webpackConfig from './../webpack.config'
 import webpackDevMiddleware from 'webpack-dev-middleware';
-import { simulateActivity } from './simulateActivity';
+import  socketIO from 'socket.io'
 const compiler = webpack(webpackConfig);
 import webpackHotMiddleware from "webpack-hot-middleware";
+import { handleRender } from './serverRenderMiddleware'
 
 import {
     channels,
@@ -15,14 +16,6 @@ import {
 import {
     users
 } from './db/User';
-
-import  socketIO from 'socket.io'
-
-import {
-    OFFLINE,
-    ONLINE,
-    AWAY
-} from './../src/actions'
 
 let app = express();
 const server = http.createServer(app);
@@ -40,18 +33,13 @@ app.use(webpackHotMiddleware(compiler, {
     'heartbeat': 10 * 1000
 }));
 
-import { getDefaultState } from './getDefaultState'
-import { handleRender } from './serverRenderMiddleWare';
 import { initializeDB } from './db/initializeDB';
+import { simulateActivity } from './simulateActivity';
 
-import {
-    chance
-} from './../src/utility';
 
 initializeDB();
-const currentUser = chance.pick(users);
+const currentUser = users[0];
 
-// Simulate a small amount of delay to demonstrate app's async features
 app.use((req,res,next)=>{
     const delay = 297;
     setTimeout(next,delay);
@@ -67,6 +55,22 @@ app.use('/channel/create/:channelID/:name/:participants',({params:{channelID,nam
     channels.push(channel);
     res.status(300).json(channel);
 });
+
+
+export const createMessage = ({userID,channelID,messageID,input}) =>{
+    const channel = channels.find(channel=>channel.id === channelID);
+
+    const message = {
+        id:messageID,
+        content:{
+            text:input
+        },
+        owner:userID
+    };
+
+    channel.messages.push(message);
+    io.emit("NEW_MESSAGE",{channelID:channel.id, ...message});
+};
 
 app.use('/channel/:id',(req,res)=>{
     res.json(channels.find(channel=>channel.id === req.params.id));
@@ -84,7 +88,7 @@ app.use('/user/:id',(req,res)=>{
 });
 
 app.use('/status/:id/:status',({params:{id,status}},res)=>{
-    if (![ONLINE,OFFLINE,AWAY].includes(status)) {
+    if (![`ONLINE`,`OFFLINE`,`AWAY`].includes(status)) {
         return res.status(403).send();
     }
     const user = users
@@ -96,21 +100,6 @@ app.use('/status/:id/:status',({params:{id,status}},res)=>{
         res.status(404).send();
     }
 });
-
-export const createMessage = ({userID,channelID,messageID,input}) =>{
-    const channel = channels.find(channel=>channel.id === channelID);
-
-    const message = {
-        id:messageID,
-        content:{
-            text:input
-        },
-        owner:userID
-    };
-
-    channel.messages.push(message);
-    io.emit("NEW_MESSAGE",{channelID:channel.id, ...message});
-}
 
 app.use('/input/submit/:userID/:channelID/:messageID/:input',({params:{userID,channelID,messageID,input}},res)=>{
     const user = users.find(user=>user.id === userID);
@@ -124,10 +113,14 @@ app.use('/input/submit/:userID/:channelID/:messageID/:input',({params:{userID,ch
 });
 
 app.use(express.static('public/css'));
+
+import {
+    getDefaultState
+} from './getDefaultState'
+
 app.use('/',handleRender(()=>getDefaultState(currentUser)));
 
 const port = 9000;
-
 server.listen(port,()=>{
     console.info(`Redux Messenger is listening on port ${port}.`);
 });

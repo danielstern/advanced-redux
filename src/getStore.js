@@ -4,53 +4,77 @@ import {
     compose
 } from 'redux';
 
-import createSagaMiddleware from 'redux-saga';
-
-import thunk from 'redux-thunk';
-import { persistState } from 'redux-devtools';
-import { getPreloadedState } from './getPreloadedState'
-import { getDebugSessionKey } from './utility'
-import { DevTools } from './components/DevTools/DevTools'
-import { initSagas } from './initSagas';
+import {
+    fromJS
+} from 'immutable';
 
 import {
-    RECEIVE_MESSAGE,
-    receiveMessage
+    users,
+} from './../server/db';
+
+import {
+    getPreloadedState
+} from './getPreloadedState';
+
+import {
+    getDefaultState,
+} from './../server/getDefaultState';
+
+import {
+    initializeDB
+} from './../server/db/initializeDB'
+
+import { createSocketMiddleware} from './socketMiddleware';
+
+import {
+    RECEIVE_MESSAGE
 } from './actions'
-
-import { reducer } from './reducers';
-import { createSocketMiddleware} from './socketMiddleware'
-
-const preloadedState = getPreloadedState();
-const sagaMiddleware = createSagaMiddleware();
-
 
 const io = window.io;
 
-const socketMiddleware = createSocketMiddleware(io)({
+const socketConfigOut = {
+    UPDATE_STATUS:(data)=>({
+        type:"UPDATE_USER_STATUS",
+        status:data
+    })
+};
+
+const socketConfigIn = {
     NEW_MESSAGE:(data)=>({
         type:RECEIVE_MESSAGE,
         message:data
     })
+};
+
+const socketMiddleware = createSocketMiddleware(io)(socketConfigOut);
+
+import { createLogger } from 'redux-logger'
+
+initializeDB();
+
+import { reducer } from './reducers';
+const logger = createLogger({
+    stateTransformer:state=>state.toJS()
 });
 
 const enhancer = compose(
     applyMiddleware(
-        sagaMiddleware,
-        thunk,
-        socketMiddleware
-    ),
-    DevTools.instrument(),
-    persistState(getDebugSessionKey())
+        socketMiddleware,
+        logger
+    )
 );
 
-const store = createStore(
-    reducer,
-    preloadedState,
-    enhancer
-);
+//const currentUser = users[0];
+//const defaultState = fromJS(getDefaultState(currentUser));
+const store = createStore(reducer,getPreloadedState(),enhancer);
 
+const socket = io();
+for (const key in socketConfigIn) {
+    socket.on(key, (data)=>{
+        store.dispatch(socketConfigIn[key](data));
+    });
+}
+
+// console.log(store.getState());
+// console.log(store.getState().toJS());
 export const getStore = ()=>store;
-
-initSagas(sagaMiddleware);
-

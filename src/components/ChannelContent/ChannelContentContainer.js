@@ -1,19 +1,14 @@
 import React from 'react'
-
 import { connect } from 'react-redux'
 
 import {
     ChannelContent
 } from './ChannelContent';
 
-import {
-    activeChannelSelector,
-} from './../../selectors'
-
 const mapStateToProps = (state) => {
     const channels = state.get(`channels`);
     const activeChannel = state.get(`activeChannel`);
-    const channel = activeChannelSelector(state);
+    const channel = channels.find(channel => channel.get(`id`) === activeChannel);
 
     return {
         messages:channel.get(`messages`),

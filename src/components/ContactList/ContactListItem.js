@@ -18,4 +18,4 @@ export const ContactListItem = ({id,name,status,openChannel})=>(
             </div>
         </div>
     </div>
-);
+)
